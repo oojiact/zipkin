@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zipkin-svc
+  labels:
+    app: zipkin-app
+spec:
+  type: NodePort
+  ports:
+  - port: 9411
+    nodePort: 30080
+  selector:
+    app: zipkin-app
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: zipkin-app-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zipkin-app
+    spec:
+      containers:
+      - name: zipkin-app-pod
+        image: openzipkin/zipkin
+        ports:
+        - containerPort: 9411
